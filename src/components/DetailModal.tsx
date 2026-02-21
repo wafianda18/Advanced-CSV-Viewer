@@ -6,21 +6,21 @@ interface Props {
 }
 
 const FIELDS: { key: keyof DataRow; label: string }[] = [
-  { key: 'src', label: 'Sumber Data' },
-  { key: 'reviewText', label: 'Review Text' },
-  { key: 'language', label: 'Bahasa' },
-  { key: 'location', label: 'Lokasi' },
-  { key: 'userLocation', label: 'User Location' },
-  { key: 'category', label: 'Kategori Wisatawan' },
-  { key: 'penarik', label: 'Faktor Penarik' },
-  { key: 'pendorong', label: 'Faktor Pendorong' },
-  { key: 'pasif', label: 'Pengalaman Pasif' },
-  { key: 'aktif', label: 'Pengalaman Aktif' },
-  { key: 'flow', label: 'Pengalaman Flow' },
-  { key: 'tipologi', label: 'Tipologi Wisatawan' },
-  { key: 'kepuasan', label: 'Tingkatan Kepuasan' },
-  { key: 'validasi', label: 'Validasi' },
-]
+  { key: "_src", label: "Sumber Data" },
+  { key: "Review Text", label: "Review Text" },
+  { key: "Location", label: "Lokasi" },
+  { key: "language", label: "Bahasa" },
+  { key: "userLocation", label: "User Location" },
+  { key: "category", label: "Kategori Wisatawan" },
+  { key: "penarik", label: "Faktor Penarik" },
+  { key: "pendorong", label: "Faktor Pendorong" },
+  { key: "pasif", label: "Pengalaman Pasif" },
+  { key: "aktif", label: "Pengalaman Aktif" },
+  { key: "flow", label: "Pengalaman Flow" },
+  { key: "tipologi", label: "Tipologi Wisatawan" },
+  { key: "kepuasan", label: "Tingkatan Kepuasan" },
+  { key: "validasi", label: "Validasi" },
+];
 
 export function DetailModal({ row, onClose }: Props) {
   if (!row) return null
