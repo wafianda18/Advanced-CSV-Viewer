@@ -13,6 +13,7 @@ export interface DataRow {
   'Tipologi Wisatawan': string
   'Tingkatan Kepuasan': string
   Validasi: string
+  [key: string]: string  // ← index signature, fixes TS2352 in export.ts
 }
 
 export interface Filters {
@@ -31,18 +32,9 @@ export interface Filters {
 }
 
 export const EMPTY_FILTERS: Filters = {
-  src: '',
-  lang: '',
-  location: '',
-  category: '',
-  penarik: '',
-  pendorong: '',
-  pasif: '',
-  aktif: '',
-  flow: '',
-  tipologi: '',
-  kepuasan: '',
-  noYogya: false,
+  src: '', lang: '', location: '', category: '',
+  penarik: '', pendorong: '', pasif: '', aktif: '',
+  flow: '', tipologi: '', kepuasan: '', noYogya: false,
 }
 
 export const YOGYA_LOCATIONS = new Set([
