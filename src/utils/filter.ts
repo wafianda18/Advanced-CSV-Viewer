@@ -1,5 +1,5 @@
 import type { DataRow, Filters } from '../types'
-import { YOGYA_LOCATIONS } from '../types'
+import { YOGYA_LOCATIONS, getValidasiStatus } from '../types'
 
 function matchField(rowVal: string, filterVal: string): boolean {
   if (!filterVal) return true
@@ -22,6 +22,8 @@ export function applyFilters(data: DataRow[], filters: Filters): DataRow[] {
     if (filters.tipologi && !matchField(r['Tipologi Wisatawan'], filters.tipologi)) return false
     if (filters.kepuasan && r['Tingkatan Kepuasan'] !== filters.kepuasan) return false
     if (filters.noYogya && YOGYA_LOCATIONS.has(r.Location)) return false
+    // Validasi filter
+    if (filters.validasi && getValidasiStatus(r) !== filters.validasi) return false
     return true
   })
 }

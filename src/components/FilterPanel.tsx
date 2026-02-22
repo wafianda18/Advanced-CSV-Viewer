@@ -137,6 +137,26 @@ export function FilterPanel({ filters, onChange, onReset }: Props) {
             { value: 'Tidak Terklasifikasi', label: 'Tidak Terklasifikasi' },
           ]}
         />
+
+        {/* ── VALIDASI FILTER ── */}
+        <div className="filter-group validasi-group">
+          <label>Validasi</label>
+          <select
+            value={filters.validasi}
+            onChange={(e) => set('validasi')(e.target.value)}
+            className={filters.validasi ? 'active' : ''}
+          >
+            <option value="">Semua Validasi</option>
+            <option value="Valid">✅ Valid</option>
+            <option value="Tidak Valid">❌ Tidak Valid</option>
+            <option value="Di Luar Lingkup">— Di Luar Lingkup</option>
+          </select>
+          <div className="validasi-hint">
+            Fokus: <span className="hint-chip">Tujuan Utama</span> &amp; <span className="hint-chip">Kebetulan</span>
+            <span className="hint-rule">Puas = Valid · Netral/Tidak Puas = Tidak Valid</span>
+          </div>
+        </div>
+
         <div className="filter-group checkbox-group">
           <input
             type="checkbox"

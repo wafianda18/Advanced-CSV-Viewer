@@ -13,7 +13,7 @@ export interface DataRow {
   'Tipologi Wisatawan': string
   'Tingkatan Kepuasan': string
   Validasi: string
-  [key: string]: string  // ← index signature, fixes TS2352 in export.ts
+  [key: string]: string
 }
 
 export interface Filters {
@@ -28,13 +28,31 @@ export interface Filters {
   flow: string
   tipologi: string
   kepuasan: string
+  validasi: string   // ← NEW
   noYogya: boolean
 }
 
 export const EMPTY_FILTERS: Filters = {
   src: '', lang: '', location: '', category: '',
   penarik: '', pendorong: '', pasif: '', aktif: '',
-  flow: '', tipologi: '', kepuasan: '', noYogya: false,
+  flow: '', tipologi: '', kepuasan: '',
+  validasi: '',      // ← NEW
+  noYogya: false,
+}
+
+// Tipologi yang masuk lingkup validasi
+export const VALIDASI_TIPOLOGI = new Set([
+  'Wisatawan Budaya sebagai Tujuan Utama',
+  'Wisatawan Budaya Kebetulan',
+])
+
+// Hitung status validasi sebuah baris
+export function getValidasiStatus(row: DataRow): 'Valid' | 'Tidak Valid' | 'Di Luar Lingkup' {
+  const tipologi = row['Tipologi Wisatawan']?.trim()
+  const kepuasan = row['Tingkatan Kepuasan']?.trim()
+  if (!VALIDASI_TIPOLOGI.has(tipologi)) return 'Di Luar Lingkup'
+  if (kepuasan === 'Puas') return 'Valid'
+  return 'Tidak Valid'
 }
 
 export const YOGYA_LOCATIONS = new Set([

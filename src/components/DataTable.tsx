@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { DataRow } from '../types'
-import { PAGE_SIZE } from '../types'
+import { PAGE_SIZE, getValidasiStatus } from '../types'
 
 interface Props {
   data: DataRow[]
@@ -26,17 +26,32 @@ function CatTag({ cat }: { cat: string }) {
 }
 
 function KepuasanTag({ val }: { val: string }) {
-  if (!val) return <span className="tag tag-tk">—</span>
   const cls: Record<string, string> = {
-    Puas: 'tag-puas',
-    Netral: 'tag-netral',
-    'Tidak Puas': 'tag-tidakpuas',
-    'Tidak Terklasifikasi': 'tag-tk',
+    Puas: 'tag-puas', Netral: 'tag-netral',
+    'Tidak Puas': 'tag-tidakpuas', 'Tidak Terklasifikasi': 'tag-tk',
   }
-  return <span className={`tag ${cls[val] || 'tag-tk'}`}>{val}</span>
+  return <span className={`tag ${cls[val] || 'tag-tk'}`}>{val || '—'}</span>
+}
+
+function ValidasiTag({ row }: { row: DataRow }) {
+  const status = getValidasiStatus(row)
+  const cls: Record<string, string> = {
+    'Valid': 'tag-valid',
+    'Tidak Valid': 'tag-invalid',
+    'Di Luar Lingkup': 'tag-diluar',
+  }
+  const icon: Record<string, string> = {
+    'Valid': '✅', 'Tidak Valid': '❌', 'Di Luar Lingkup': '—',
+  }
+  return (
+    <span className={`tag ${cls[status]}`} title={status}>
+      {icon[status]} {status === 'Di Luar Lingkup' ? 'Di Luar' : status}
+    </span>
+  )
 }
 
 function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
+  const validasi = getValidasiStatus(row)
   const fields: [string, string][] = [
     ['Sumber Data', row._src],
     ['Lokasi', row.Location],
@@ -55,7 +70,19 @@ function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <button className="modal-close" onClick={onClose}>✕</button>
-        <h3 className="modal-title">Detail — {row.Location || 'Review'}</h3>
+        <h3 className="modal-title">{row['Location'] || 'Detail Review'}</h3>
+
+        {/* Validasi badge prominent */}
+        <div className={`modal-validasi modal-validasi-${validasi === 'Valid' ? 'valid' : validasi === 'Tidak Valid' ? 'invalid' : 'diluar'}`}>
+          <strong>Status Validasi:</strong>{' '}
+          {validasi === 'Valid' ? '✅ Valid' : validasi === 'Tidak Valid' ? '❌ Tidak Valid' : '— Di Luar Lingkup'}
+          {validasi !== 'Di Luar Lingkup' && (
+            <span className="modal-validasi-rule">
+              {row['Tipologi Wisatawan']} · {row['Tingkatan Kepuasan']}
+            </span>
+          )}
+        </div>
+
         {fields.map(([lbl, val]) => (
           <div key={lbl} className="modal-field">
             <label>{lbl}</label>
@@ -77,12 +104,10 @@ export function DataTable({ data, loading }: Props) {
   const goPage = (p: number) => {
     if (p < 1 || p > totalPages) return
     setPage(p)
+    document.querySelector('.table-scroll')?.scrollTo(0, 0)
   }
 
-  // Reset to page 1 when data changes
-  useState(() => { setPage(1) })
-
-  const getPages = () => {
+  const getPages = (): (number | '...')[] => {
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1)
     const pages: (number | '...')[] = [1, 2]
     if (page > 4) pages.push('...')
@@ -123,12 +148,13 @@ export function DataTable({ data, loading }: Props) {
                 <th>Peng. Flow</th>
                 <th>Tipologi</th>
                 <th>Kepuasan</th>
+                <th>Validasi</th>
               </tr>
             </thead>
             <tbody>
               {pageData.length === 0 ? (
                 <tr>
-                  <td colSpan={13} className="empty-state">
+                  <td colSpan={14} className="empty-state">
                     <div className="empty-icon">🔍</div>
                     <p>Tidak ada data yang sesuai filter</p>
                   </td>
@@ -151,6 +177,7 @@ export function DataTable({ data, loading }: Props) {
                     <td><MultiTags val={row['Pengalaman Flow']} /></td>
                     <td className="td-tipologi">{row['Tipologi Wisatawan'] || '—'}</td>
                     <td><KepuasanTag val={row['Tingkatan Kepuasan']} /></td>
+                    <td><ValidasiTag row={row} /></td>
                   </tr>
                 ))
               )}
