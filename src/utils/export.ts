@@ -42,7 +42,12 @@ export function exportToExcel(filteredData: DataRow[]) {
     ]),
   ]
   const wsAll = XLSX.utils.aoa_to_sheet(allData)
-  wsAll['!cols'] = [12, ...headerLabels.map(() => ({ wch: 18 })), { wch: 16 }]
+  wsAll["!cols"] = [
+    { wch: 12 },
+    ...headerLabels.map(() => ({ wch: 18 })),
+    { wch: 16 },
+  ];
+
   XLSX.utils.book_append_sheet(wb, wsAll, 'Semua Data')
 
   XLSX.writeFile(wb, `export_${new Date().toISOString().slice(0, 10)}_${filteredData.length}rows.xlsx`)
