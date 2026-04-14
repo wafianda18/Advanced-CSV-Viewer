@@ -1,5 +1,4 @@
 import type { DataRow, Filters } from '../types'
-import { YOGYA_LOCATIONS, getValidasiStatus } from '../types'
 
 function matchField(rowVal: string, filterVal: string): boolean {
   if (!filterVal) return true
@@ -11,7 +10,6 @@ function matchField(rowVal: string, filterVal: string): boolean {
 export function applyFilters(data: DataRow[], filters: Filters): DataRow[] {
   return data.filter((r) => {
     if (filters.src && r._src !== filters.src) return false
-    if (filters.lang && r.Language !== filters.lang) return false
     if (filters.location && r.Location !== filters.location) return false
     if (filters.category && r['Tourist Category'] !== filters.category) return false
     if (filters.penarik && !matchField(r['Faktor Penarik'], filters.penarik)) return false
@@ -21,9 +19,6 @@ export function applyFilters(data: DataRow[], filters: Filters): DataRow[] {
     if (filters.flow && !matchField(r['Pengalaman Flow'], filters.flow)) return false
     if (filters.tipologi && !matchField(r['Tipologi Wisatawan'], filters.tipologi)) return false
     if (filters.kepuasan && r['Tingkatan Kepuasan'] !== filters.kepuasan) return false
-    if (filters.noYogya && YOGYA_LOCATIONS.has(r.Location)) return false
-    // Validasi filter
-    if (filters.validasi && getValidasiStatus(r) !== filters.validasi) return false
     return true
   })
 }

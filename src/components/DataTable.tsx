@@ -33,52 +33,44 @@ function KepuasanTag({ val }: { val: string }) {
   return <span className={`tag ${cls[val] || 'tag-tk'}`}>{val || '—'}</span>
 }
 
-function ValidasiTag({ row }: { row: DataRow }) {
-  const status = getValidasiStatus(row)
-  const cls: Record<string, string> = {
-    'Valid': 'tag-valid',
-    'Tidak Valid': 'tag-invalid',
-    'Di Luar Lingkup': 'tag-diluar',
-  }
-  const icon: Record<string, string> = {
-    'Valid': '✅', 'Tidak Valid': '❌', 'Di Luar Lingkup': '—',
-  }
-  return (
-    <span className={`tag ${cls[status]}`} title={status}>
-      {icon[status]} {status === 'Di Luar Lingkup' ? 'Di Luar' : status}
-    </span>
-  )
-}
-
 function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
   const validasi = getValidasiStatus(row)
   const fields: [string, string][] = [
-    ['Sumber Data', row._src],
-    ['Lokasi', row.Location],
-    ['Bahasa', row.Language],
-    ['Kategori', row['Tourist Category']],
-    ['Review Text', row['Review Text']],
-    ['Faktor Penarik', row['Faktor Penarik']],
-    ['Faktor Pendorong', row['Faktor Pendorong']],
-    ['Pengalaman Pasif', row['Pengalaman Pasif']],
-    ['Pengalaman Aktif', row['Pengalaman Aktif']],
-    ['Pengalaman Flow', row['Pengalaman Flow']],
-    ['Tipologi Wisatawan', row['Tipologi Wisatawan']],
-    ['Tingkatan Kepuasan', row['Tingkatan Kepuasan']],
-  ]
+    ["Sumber Data", row._src],
+    ["Lokasi", row.Location],
+    ["Kategori", row["Tourist Category"]],
+    ["Review Text", row["Review Text"]],
+    ["Faktor Penarik", row["Faktor Penarik"]],
+    ["Faktor Pendorong", row["Faktor Pendorong"]],
+    ["Pengalaman Pasif", row["Pengalaman Pasif"]],
+    ["Pengalaman Aktif", row["Pengalaman Aktif"]],
+    ["Pengalaman Flow", row["Pengalaman Flow"]],
+    ["Tipologi Wisatawan", row["Tipologi Wisatawan"]],
+    ["Tingkatan Kepuasan", row["Tingkatan Kepuasan"]],
+  ];
   return (
-    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className="modal-overlay"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className="modal">
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <h3 className="modal-title">{row['Location'] || 'Detail Review'}</h3>
+        <button className="modal-close" onClick={onClose}>
+          ✕
+        </button>
+        <h3 className="modal-title">{row["Location"] || "Detail Review"}</h3>
 
-        {/* Validasi badge prominent */}
-        <div className={`modal-validasi modal-validasi-${validasi === 'Valid' ? 'valid' : validasi === 'Tidak Valid' ? 'invalid' : 'diluar'}`}>
-          <strong>Status Validasi:</strong>{' '}
-          {validasi === 'Valid' ? '✅ Valid' : validasi === 'Tidak Valid' ? '❌ Tidak Valid' : '— Di Luar Lingkup'}
-          {validasi !== 'Di Luar Lingkup' && (
+        <div
+          className={`modal-validasi modal-validasi-${validasi === "Valid" ? "valid" : validasi === "Tidak Valid" ? "invalid" : "diluar"}`}
+        >
+          <strong>Status Validasi:</strong>{" "}
+          {validasi === "Valid"
+            ? "✅ Valid"
+            : validasi === "Tidak Valid"
+              ? "❌ Tidak Valid"
+              : "— Di Luar Lingkup"}
+          {validasi !== "Di Luar Lingkup" && (
             <span className="modal-validasi-rule">
-              {row['Tipologi Wisatawan']} · {row['Tingkatan Kepuasan']}
+              {row["Tipologi Wisatawan"]} · {row["Tingkatan Kepuasan"]}
             </span>
           )}
         </div>
@@ -86,12 +78,28 @@ function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
         {fields.map(([lbl, val]) => (
           <div key={lbl} className="modal-field">
             <label>{lbl}</label>
-            <p>{val || '—'}</p>
+            {lbl === "Review Text" ? (
+              <div className="modal-review-content">
+                <p>{val || "—"}</p>
+                <div className="modal-review-actions">
+                  <a
+                    href={`https://translate.google.com/?sl=auto&tl=id&text=${encodeURIComponent(val)}&op=translate`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="translate-link"
+                  >
+                    🌐 Terjemahkan Review
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <p>{val || "—"}</p>
+            )}
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export function DataTable({ data, loading }: Props) {
@@ -137,7 +145,6 @@ export function DataTable({ data, loading }: Props) {
               <tr>
                 <th>#</th>
                 <th>Sumber</th>
-                <th>Bhs</th>
                 <th>Lokasi</th>
                 <th>Kat</th>
                 <th>Review Text</th>
@@ -148,36 +155,54 @@ export function DataTable({ data, loading }: Props) {
                 <th>Peng. Flow</th>
                 <th>Tipologi</th>
                 <th>Kepuasan</th>
-                <th>Validasi</th>
               </tr>
             </thead>
             <tbody>
               {pageData.length === 0 ? (
                 <tr>
-                  <td colSpan={14} className="empty-state">
+                  <td colSpan={12} className="empty-state">
                     <div className="empty-icon">🔍</div>
                     <p>Tidak ada data yang sesuai filter</p>
                   </td>
                 </tr>
               ) : (
                 pageData.map((row, i) => (
-                  <tr key={(page - 1) * PAGE_SIZE + i} onClick={() => setSelectedRow(row)}>
+                  <tr
+                    key={(page - 1) * PAGE_SIZE + i}
+                    onClick={() => setSelectedRow(row)}
+                  >
                     <td className="td-num">{(page - 1) * PAGE_SIZE + i + 1}</td>
-                    <td><SrcTag src={row._src} /></td>
-                    <td className="td-narrow">{row.Language || '—'}</td>
-                    <td className="td-location">{row.Location || '—'}</td>
-                    <td><CatTag cat={row['Tourist Category']} /></td>
-                    <td className="td-review">
-                      <div className="review-clamp">{row['Review Text']}</div>
+                    <td>
+                      <SrcTag src={row._src} />
                     </td>
-                    <td><MultiTags val={row['Faktor Penarik']} /></td>
-                    <td><MultiTags val={row['Faktor Pendorong']} /></td>
-                    <td><MultiTags val={row['Pengalaman Pasif']} /></td>
-                    <td><MultiTags val={row['Pengalaman Aktif']} /></td>
-                    <td><MultiTags val={row['Pengalaman Flow']} /></td>
-                    <td className="td-tipologi">{row['Tipologi Wisatawan'] || '—'}</td>
-                    <td><KepuasanTag val={row['Tingkatan Kepuasan']} /></td>
-                    <td><ValidasiTag row={row} /></td>
+                    <td className="td-location">{row.Location || "—"}</td>
+                    <td>
+                      <CatTag cat={row["Tourist Category"]} />
+                    </td>
+                    <td className="td-review">
+                      <div className="review-clamp">{row["Review Text"]}</div>
+                    </td>
+                    <td>
+                      <MultiTags val={row["Faktor Penarik"]} />
+                    </td>
+                    <td>
+                      <MultiTags val={row["Faktor Pendorong"]} />
+                    </td>
+                    <td>
+                      <MultiTags val={row["Pengalaman Pasif"]} />
+                    </td>
+                    <td>
+                      <MultiTags val={row["Pengalaman Aktif"]} />
+                    </td>
+                    <td>
+                      <MultiTags val={row["Pengalaman Flow"]} />
+                    </td>
+                    <td className="td-tipologi">
+                      {row["Tipologi Wisatawan"] || "—"}
+                    </td>
+                    <td>
+                      <KepuasanTag val={row["Tingkatan Kepuasan"]} />
+                    </td>
                   </tr>
                 ))
               )}
@@ -187,19 +212,39 @@ export function DataTable({ data, loading }: Props) {
 
         {totalPages > 1 && (
           <div className="pagination">
-            <button className="page-btn" onClick={() => goPage(page - 1)} disabled={page === 1}>←</button>
+            <button
+              className="page-btn"
+              onClick={() => goPage(page - 1)}
+              disabled={page === 1}
+            >
+              ←
+            </button>
             {getPages().map((p, i) =>
-              p === '...'
-                ? <span key={`dots-${i}`} className="page-dots">…</span>
-                : <button
-                    key={p}
-                    className={`page-btn ${p === page ? 'active' : ''}`}
-                    onClick={() => goPage(p as number)}
-                  >{p}</button>
+              p === "..." ? (
+                <span key={`dots-${i}`} className="page-dots">
+                  …
+                </span>
+              ) : (
+                <button
+                  key={p}
+                  className={`page-btn ${p === page ? "active" : ""}`}
+                  onClick={() => goPage(p as number)}
+                >
+                  {p}
+                </button>
+              ),
             )}
-            <button className="page-btn" onClick={() => goPage(page + 1)} disabled={page === totalPages}>→</button>
+            <button
+              className="page-btn"
+              onClick={() => goPage(page + 1)}
+              disabled={page === totalPages}
+            >
+              →
+            </button>
             <span className="page-info">
-              {((page - 1) * PAGE_SIZE + 1).toLocaleString()}–{Math.min(page * PAGE_SIZE, data.length).toLocaleString()} dari {data.length.toLocaleString()}
+              {((page - 1) * PAGE_SIZE + 1).toLocaleString()}–
+              {Math.min(page * PAGE_SIZE, data.length).toLocaleString()} dari{" "}
+              {data.length.toLocaleString()}
             </span>
           </div>
         )}
@@ -209,5 +254,5 @@ export function DataTable({ data, loading }: Props) {
         <ModalDetail row={selectedRow} onClose={() => setSelectedRow(null)} />
       )}
     </>
-  )
+  );
 }

@@ -17,28 +17,30 @@ export interface DataRow {
 }
 
 export interface Filters {
-  src: string
-  lang: string
-  location: string
-  category: string
-  penarik: string
-  pendorong: string
-  pasif: string
-  aktif: string
-  flow: string
-  tipologi: string
-  kepuasan: string
-  validasi: string   // ← NEW
-  noYogya: boolean
+  src: string;
+  location: string;
+  category: string;
+  penarik: string;
+  pendorong: string;
+  pasif: string;
+  aktif: string;
+  flow: string;
+  tipologi: string;
+  kepuasan: string;
 }
 
 export const EMPTY_FILTERS: Filters = {
-  src: '', lang: '', location: '', category: '',
-  penarik: '', pendorong: '', pasif: '', aktif: '',
-  flow: '', tipologi: '', kepuasan: '',
-  validasi: '',      // ← NEW
-  noYogya: false,
-}
+  src: "",
+  location: "",
+  category: "",
+  penarik: "",
+  pendorong: "",
+  pasif: "",
+  aktif: "",
+  flow: "",
+  tipologi: "",
+  kepuasan: "",
+};
 
 // Tipologi yang masuk lingkup validasi
 export const VALIDASI_TIPOLOGI = new Set([
@@ -54,11 +56,5 @@ export function getValidasiStatus(row: DataRow): 'Valid' | 'Tidak Valid' | 'Di L
   if (kepuasan === 'Puas') return 'Valid'
   return 'Tidak Valid'
 }
-
-export const YOGYA_LOCATIONS = new Set([
-  'Jogja National Museum',
-  'Yogyakarta Palace',
-  'Yogyakarta Monument',
-])
 
 export const PAGE_SIZE = 50
