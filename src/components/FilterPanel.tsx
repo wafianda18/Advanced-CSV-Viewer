@@ -1,18 +1,23 @@
-import type { Filters } from '../types'
+import { useMemo } from "react";
+import type { DataRow, Filters } from "../types";
 
 interface Props {
-  filters: Filters
-  onChange: (f: Filters) => void
-  onReset: () => void
+  filters: Filters;
+  onChange: (f: Filters) => void;
+  onReset: () => void;
+  data: DataRow[];
 }
 
 function Select({
-  label, value, options, onChange,
+  label,
+  value,
+  options,
+  onChange,
 }: {
-  label: string
-  value: string
-  options: { value: string; label: string }[]
-  onChange: (v: string) => void
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (v: string) => void;
 }) {
   return (
     <div className="filter-group">
@@ -20,20 +25,40 @@ function Select({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={value ? 'active' : ''}
+        className={value ? "active" : ""}
       >
         <option value="">Semua {label}</option>
         {options.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
     </div>
-  )
+  );
 }
 
-export function FilterPanel({ filters, onChange, onReset }: Props) {
-  const set = (key: keyof Filters) => (val: string | boolean) =>
-    onChange({ ...filters, [key]: val })
+export function FilterPanel({ filters, onChange, onReset, data }: Props) {
+  const set = (key: keyof Filters) => (val: string) => {
+    // Jika merubah sumber data, reset lokasi
+    if (key === "src" && val !== filters.src) {
+      onChange({ ...filters, [key]: val, location: "" });
+    } else {
+      onChange({ ...filters, [key]: val });
+    }
+  };
+
+  // Ambil lokasi unik berdasarkan sumber data yang dipilih
+  const locationOptions = useMemo(() => {
+    let filtered = data;
+    if (filters.src) {
+      filtered = data.filter((r) => r._src === filters.src);
+    }
+    const locations = Array.from(
+      new Set(filtered.map((r) => r.Location).filter(Boolean)),
+    ).sort();
+    return locations.map((v) => ({ value: v, label: v }));
+  }, [data, filters.src]);
 
   return (
     <div className="filter-card">
@@ -53,27 +78,7 @@ export function FilterPanel({ filters, onChange, onReset }: Props) {
           label="Lokasi"
           value={filters.location}
           onChange={set("location")}
-          options={[
-            "Fort Vredeburg Museum",
-            "Ijo Temple",
-            "Imogiri Kings Cemetery",
-            "Jogja National Museum",
-            "Mataram Kings Cemetery Kotagede",
-            "Museum Sonobudoyo",
-            "Museum Ullen Sentalu",
-            "Plaosan Temple",
-            "Prambanan Temple Admission Ticket",
-            "Prambanan Temples",
-            "Ramayana Ballet at Prambanan",
-            "Ramayana Ballet at Prambanan Admission Ticket",
-            "Ratu Boko Temple",
-            "Ratu Boko Temple Admission Ticket",
-            "The Sambisari Temple",
-            "Ullen Sentalu Museum Experience",
-            "Water Castle (Tamansari)",
-            "Yogyakarta Monument",
-            "Yogyakarta Palace",
-          ].map((v) => ({ value: v, label: v }))}
+          options={locationOptions}
         />
         <Select
           label="Kategori Wisatawan"

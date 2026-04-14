@@ -64,6 +64,7 @@ export default function App() {
               filters={filters}
               onChange={setFilters}
               onReset={handleReset}
+              data={data}
             />
             <StatsBar
               total={data.length}
