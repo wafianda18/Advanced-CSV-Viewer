@@ -24,7 +24,6 @@ export interface Filters {
   pendorong: string;
   pasif: string;
   aktif: string;
-  flow: string;
   tipologi: string;
   kepuasan: string;
 }
@@ -37,7 +36,6 @@ export const EMPTY_FILTERS: Filters = {
   pendorong: "",
   pasif: "",
   aktif: "",
-  flow: "",
   tipologi: "",
   kepuasan: "",
 };

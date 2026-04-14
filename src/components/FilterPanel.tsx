@@ -128,16 +128,6 @@ export function FilterPanel({ filters, onChange, onReset, data }: Props) {
           ]}
         />
         <Select
-          label="Pengalaman Flow"
-          value={filters.flow}
-          onChange={set("flow")}
-          options={[
-            "Keterlibatan penuh",
-            "Distorsi waktu",
-            "Kesadaran diri",
-          ].map((v) => ({ value: v, label: v }))}
-        />
-        <Select
           label="Tipologi Wisatawan"
           value={filters.tipologi}
           onChange={set("tipologi")}

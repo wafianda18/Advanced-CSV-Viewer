@@ -16,7 +16,6 @@ export function applyFilters(data: DataRow[], filters: Filters): DataRow[] {
     if (filters.pendorong && !matchField(r['Faktor Pendorong'], filters.pendorong)) return false
     if (filters.pasif && !matchField(r['Pengalaman Pasif'], filters.pasif)) return false
     if (filters.aktif && !matchField(r['Pengalaman Aktif'], filters.aktif)) return false
-    if (filters.flow && !matchField(r['Pengalaman Flow'], filters.flow)) return false
     if (filters.tipologi && !matchField(r['Tipologi Wisatawan'], filters.tipologi)) return false
     if (filters.kepuasan && r['Tingkatan Kepuasan'] !== filters.kepuasan) return false
     return true
