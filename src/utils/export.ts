@@ -11,10 +11,17 @@ export function exportToExcel(filteredData: DataRow[]) {
 
   const wb = XLSX.utils.book_new()
   const dataHeaders: (keyof DataRow)[] = [
-    'User Location', 'Review Text', 'Location', 'Tourist Category',
-    'Faktor Penarik', 'Faktor Pendorong', 'Pengalaman Pasif', 'Pengalaman Aktif',
-    'Pengalaman Flow', 'Tipologi Wisatawan', 'Tingkatan Kepuasan',
-  ]
+    "User Location",
+    "Review Text",
+    "Location",
+    "Tourist Category",
+    "Faktor Penarik",
+    "Faktor Pendorong",
+    "Pengalaman Pasif",
+    "Pengalaman Aktif",
+    "Tipologi Wisatawan",
+    "Tingkatan Kepuasan",
+  ];
   const headerLabels = dataHeaders.map(String)
 
   Object.entries(groups).forEach(([sheetName, rows]) => {

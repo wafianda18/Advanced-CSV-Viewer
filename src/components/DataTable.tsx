@@ -44,7 +44,6 @@ function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
     ["Faktor Pendorong", row["Faktor Pendorong"]],
     ["Pengalaman Pasif", row["Pengalaman Pasif"]],
     ["Pengalaman Aktif", row["Pengalaman Aktif"]],
-    ["Pengalaman Flow", row["Pengalaman Flow"]],
     ["Tipologi Wisatawan", row["Tipologi Wisatawan"]],
     ["Tingkatan Kepuasan", row["Tingkatan Kepuasan"]],
   ];
@@ -58,22 +57,6 @@ function ModalDetail({ row, onClose }: { row: DataRow; onClose: () => void }) {
           ✕
         </button>
         <h3 className="modal-title">{row["Location"] || "Detail Review"}</h3>
-
-        <div
-          className={`modal-validasi modal-validasi-${validasi === "Valid" ? "valid" : validasi === "Tidak Valid" ? "invalid" : "diluar"}`}
-        >
-          <strong>Status Validasi:</strong>{" "}
-          {validasi === "Valid"
-            ? "✅ Valid"
-            : validasi === "Tidak Valid"
-              ? "❌ Tidak Valid"
-              : "— Di Luar Lingkup"}
-          {validasi !== "Di Luar Lingkup" && (
-            <span className="modal-validasi-rule">
-              {row["Tipologi Wisatawan"]} · {row["Tingkatan Kepuasan"]}
-            </span>
-          )}
-        </div>
 
         {fields.map(([lbl, val]) => (
           <div key={lbl} className="modal-field">
@@ -152,7 +135,6 @@ export function DataTable({ data, loading }: Props) {
                 <th>Faktor Pendorong</th>
                 <th>Peng. Pasif</th>
                 <th>Peng. Aktif</th>
-                <th>Peng. Flow</th>
                 <th>Tipologi</th>
                 <th>Kepuasan</th>
               </tr>
@@ -194,9 +176,7 @@ export function DataTable({ data, loading }: Props) {
                     <td>
                       <MultiTags val={row["Pengalaman Aktif"]} />
                     </td>
-                    <td>
-                      <MultiTags val={row["Pengalaman Flow"]} />
-                    </td>
+
                     <td className="td-tipologi">
                       {row["Tipologi Wisatawan"] || "—"}
                     </td>
