@@ -3,7 +3,7 @@ import { useData } from './hooks/useData'
 import { FilterPanel } from './components/FilterPanel'
 import { StatsBar } from './components/StatsBar'
 import { DataTable } from './components/DataTable'
-import { TipologiScatterPlot } from './components/TipologiScatterPlot'
+import { ChartPanel } from './components/ChartPanel'
 import { applyFilters } from './utils/filter'
 import { exportToExcel } from './utils/export'
 import { EMPTY_FILTERS } from './types'
@@ -73,7 +73,7 @@ export default function App() {
               onExport={handleExport}
               exporting={exporting}
             />
-            <TipologiScatterPlot data={filteredData} />
+            <ChartPanel data={filteredData} />
             <DataTable data={filteredData} loading={loading} />
           </>
         )}

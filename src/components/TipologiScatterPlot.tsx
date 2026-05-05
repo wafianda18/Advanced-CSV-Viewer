@@ -83,7 +83,29 @@ export function TipologiScatterPlot({ data }: Props) {
       if (!groups[key]) groups[key] = { tipologi, kepuasan, location, count: 0 }
       groups[key].count++
     })
-    return Object.values(groups)
+
+    const result: BubbleNode[] = []
+
+    // Pecah data yang besar menjadi banyak bulatan (kelipatan 50 atau sisa)
+    const CHUNK_SIZE = 50;
+
+    Object.values(groups).forEach(g => {
+      let remaining = g.count;
+      while (remaining > 0) {
+        const chunk = Math.min(remaining, CHUNK_SIZE);
+        result.push({
+          tipologi: g.tipologi,
+          kepuasan: g.kepuasan,
+          location: g.location,
+          count: chunk,
+          // Ini akan diisi di useEffect
+          tx: 0, ty: 0, x: 0, y: 0, r: 0
+        });
+        remaining -= chunk;
+      }
+    });
+
+    return result;
   }, [data, filterMode, selectedLocation])
 
   const totalCount = useMemo(() => bubbles.reduce((s, b) => s + b.count, 0), [bubbles])
@@ -196,12 +218,9 @@ export function TipologiScatterPlot({ data }: Props) {
 
     // ── Bubble scale ─────────────────────────────────────────────
     const maxCount = d3.max(bubbles, b => b.count) ?? 1
-    const minR = 4
-    const maxR = Math.min(34, Math.sqrt(maxCount) * 2.0)
-
     const rScale = d3.scaleSqrt()
-      .domain([1, maxCount])
-      .range([minR, maxR])
+      .domain([1, Math.max(50, maxCount)])
+      .range([4, 20])
 
     // Clamp boundaries per section
     // Top: two sections (0..topDivX) and (topDivX..innerW)
@@ -227,19 +246,19 @@ export function TipologiScatterPlot({ data }: Props) {
       const r = rScale(b.count)
       return {
         ...b, tx, ty, r,
-        x: tx + (Math.random() - 0.5) * 20,
-        y: ty + (Math.random() - 0.5) * 20,
+        x: tx + (Math.random() - 0.5) * 40,
+        y: ty + (Math.random() - 0.5) * 40,
       }
     })
 
     // Force simulation — cluster to anchor, avoid collisions
     const sim = d3.forceSimulation(nodes as any)
-      .force('x', d3.forceX((d: any) => d.tx).strength(0.55))
-      .force('y', d3.forceY((d: any) => d.ty).strength(0.55))
-      .force('collide', d3.forceCollide((d: any) => d.r + 1.5).strength(0.85))
+      .force('x', d3.forceX((d: any) => d.tx).strength(0.15))
+      .force('y', d3.forceY((d: any) => d.ty).strength(0.15))
+      .force('collide', d3.forceCollide((d: any) => d.r + 1.5).strength(0.9))
       .stop()
 
-    for (let i = 0; i < 320; i++) sim.tick()
+    for (let i = 0; i < 300; i++) sim.tick()
 
     // Clamp each node within its section bounds
     nodes.forEach((n: any) => {
@@ -285,9 +304,7 @@ export function TipologiScatterPlot({ data }: Props) {
         .text(label)
     })
 
-    // ── Right legend: bubble size ────────────────────────────────
-    const sizeLeg = d3.select(svg).append('g')
-      .attr('transform', `translate(${legX},${margin.top + 36 + LEGEND_ITEMS.length * 30 + 28})`)
+
 
   }, [bubbles])
 
@@ -301,7 +318,7 @@ export function TipologiScatterPlot({ data }: Props) {
       <div className="scatter-header">
         <div>
           <h2 className="scatter-title">
-            Kepuasan Tipologi Wisatawan Budaya ({categoryLabel})
+            Kepuasan Tipologi Wisatawan ({categoryLabel})
           </h2>
           <p className="scatter-subtitle">({locationName})</p>
         </div>
