@@ -114,7 +114,7 @@ export function FilterPanel({ filters, onChange, onReset, data }: Props) {
           value={filters.pasif}
           onChange={set("pasif")}
           options={[
-            { value: "Estetika", label: "Estetika" },
+            { value: "Pemandangan", label: "Pemandangan" },
             { value: "Hiburan", label: "Hiburan" },
           ]}
         />
