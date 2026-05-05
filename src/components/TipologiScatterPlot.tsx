@@ -289,30 +289,6 @@ export function TipologiScatterPlot({ data }: Props) {
     const sizeLeg = d3.select(svg).append('g')
       .attr('transform', `translate(${legX},${margin.top + 36 + LEGEND_ITEMS.length * 30 + 28})`)
 
-    sizeLeg.append('text')
-      .attr('y', 0)
-      .attr('font-size', 8.5).attr('font-weight', '700').attr('fill', '#999')
-      .attr('letter-spacing', '1')
-      .text('JUMLAH DATA')
-
-    const sizeStops = [10, 100, 500].filter(v => v <= maxCount)
-    if (maxCount > 0 && !sizeStops.includes(maxCount)) sizeStops.push(maxCount)
-
-    let sizeOffY = 16
-    sizeStops.forEach(n => {
-      const r = rScale(n)
-      const g = sizeLeg.append('g').attr('transform', `translate(${r + 2},${sizeOffY + r})`)
-      g.append('circle')
-        .attr('r', r).attr('cx', 0).attr('cy', 0)
-        .attr('fill', '#0f40eeff').attr('fill-opacity', 0.65)
-        .attr('stroke', '#0f40eeff').attr('stroke-width', 1)
-      g.append('text')
-        .attr('x', r + 7).attr('y', 4)
-        .attr('font-size', 10).attr('fill', '#0f40eeff')
-        .text(n >= 1000 ? `${(n / 1000).toFixed(1)}k` : n.toLocaleString('id-ID'))
-      sizeOffY += r * 2 + 10
-    })
-
   }, [bubbles])
 
   const locationName = selectedLocation === 'all' ? 'Semua Lokasi' : selectedLocation
