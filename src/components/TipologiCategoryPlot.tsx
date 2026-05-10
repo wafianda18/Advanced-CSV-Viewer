@@ -114,20 +114,20 @@ export function TipologiCategoryPlot({ data }: Props) {
     // Horizontal divider
     root.append('line')
       .attr('x1', 0).attr('y1', cy).attr('x2', innerW).attr('y2', cy)
-      .attr('stroke', '#999').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,4')
+      .attr('stroke', '#777').attr('stroke-width', 2)
 
     // Top vertical divider @50%
     root.append('line')
       .attr('x1', topDivX).attr('y1', 0).attr('x2', topDivX).attr('y2', cy)
-      .attr('stroke', '#999').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,4')
+      .attr('stroke', '#777').attr('stroke-width', 2)
 
     // Bottom vertical dividers @1/3 and @2/3
     root.append('line')
       .attr('x1', botDiv1).attr('y1', cy).attr('x2', botDiv1).attr('y2', innerH)
-      .attr('stroke', '#999').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,4')
+      .attr('stroke', '#777').attr('stroke-width', 2)
     root.append('line')
       .attr('x1', botDiv2).attr('y1', cy).attr('x2', botDiv2).attr('y2', innerH)
-      .attr('stroke', '#999').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,4')
+      .attr('stroke', '#777').attr('stroke-width', 2)
 
     // Axis labels
     root.append('text')
@@ -157,7 +157,7 @@ export function TipologiCategoryPlot({ data }: Props) {
       lines.forEach((line, i) => {
         g.append('text')
           .attr('y', i * 13).attr('text-anchor', anchor as any)
-          .attr('font-size', 10).attr('fill', '#888').attr('font-style', 'italic')
+          .attr('font-size', 11).attr('fill', '#555').attr('font-weight', 'bold')
           .text(line)
       })
     })
