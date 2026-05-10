@@ -133,11 +133,15 @@ export function TipologiScatterPlot({ data }: Props) {
     // ── Grid lines ──────────────────────────────────────────────
     const cy = innerH / 2   // horizontal divider
 
-    // Outer border
-    root.append('rect')
-      .attr('x', 0).attr('y', 0)
-      .attr('width', innerW).attr('height', innerH)
-      .attr('fill', 'none').attr('stroke', '#bbb').attr('stroke-width', 1)
+    // Left border (Y axis)
+    root.append('line')
+      .attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', innerH)
+      .attr('stroke', '#333').attr('stroke-width', 2.5)
+
+    // Bottom border (X axis)
+    root.append('line')
+      .attr('x1', 0).attr('y1', innerH).attr('x2', innerW).attr('y2', innerH)
+      .attr('stroke', '#333').attr('stroke-width', 2.5)
 
     // Horizontal divider (top/bottom half)
     root.append('line')
