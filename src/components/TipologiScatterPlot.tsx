@@ -331,13 +331,13 @@ export function TipologiScatterPlot({ data }: Props) {
           <div className="scatter-ctrl-group">
             <span className="scatter-ctrl-label">Kategori Wisatawan</span>
             <div className="scatter-btn-group">
-              {(['all', 'mancanegara', 'domestik'] as FilterMode[]).map(m => (
+              {(['all', 'domestik', 'mancanegara'] as FilterMode[]).map(m => (
                 <button
                   key={m}
                   className={`scatter-btn ${filterMode === m ? 'active' : ''}`}
                   onClick={() => setFilterMode(m)}
                 >
-                  {m === 'all' ? 'Semua' : m === 'mancanegara' ? 'Mancanegara' : 'Domestik'}
+                  {m === 'all' ? 'Semua' : m === 'domestik' ? 'Domestik' : 'Mancanegara'}
                 </button>
               ))}
             </div>

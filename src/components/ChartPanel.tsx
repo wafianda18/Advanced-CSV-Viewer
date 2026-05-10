@@ -11,21 +11,21 @@ type ChartTab = 'kepuasan' | 'kategori'
 
 const TABS: { id: ChartTab; label: string; icon: string; desc: string }[] = [
   {
-    id: 'kepuasan',
-    icon: '📊',
-    label: 'Kepuasan Tipologi',
-    desc: 'Distribusi kepuasan (Puas / Netral / Tidak Puas) per tipologi wisatawan',
-  },
-  {
     id: 'kategori',
     icon: '🌐',
     label: 'Tipologi per Kategori',
     desc: 'Perbandingan wisatawan Mancanegara dan Domestik per tipologi wisatawan',
   },
+  {
+    id: 'kepuasan',
+    icon: '📊',
+    label: 'Kepuasan Tipologi',
+    desc: 'Distribusi kepuasan (Puas / Netral / Tidak Puas) per tipologi wisatawan',
+  },
 ]
 
 export function ChartPanel({ data }: Props) {
-  const [activeTab, setActiveTab] = useState<ChartTab>('kepuasan')
+  const [activeTab, setActiveTab] = useState<ChartTab>('kategori')
 
   return (
     <div className="chart-panel">
