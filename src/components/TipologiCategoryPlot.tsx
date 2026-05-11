@@ -25,6 +25,8 @@ const LEGEND_ITEMS = [
   { label: 'Wisatawan Domestik', color: '#1565c0' },
 ]
 
+type FilterMode = 'all' | 'mancanegara' | 'domestik'
+
 interface BubbleNode {
   tipologi: string
   category: string
@@ -36,6 +38,7 @@ interface BubbleNode {
 export function TipologiCategoryPlot({ data }: Props) {
   const svgRef = useRef<SVGSVGElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const [filterMode, setFilterMode] = useState<FilterMode>('all')
   const [selectedLocation, setSelectedLocation] = useState<string>('all')
 
   const locations = useMemo(() =>
@@ -49,6 +52,8 @@ export function TipologiCategoryPlot({ data }: Props) {
       const category = r['Tourist Category']?.toLowerCase().trim()
       const location = r['Location']?.trim() || '(Unknown)'
       if (!TIPOLOGI_QUAD[tipologi]) return
+      if (filterMode === 'mancanegara' && category !== 'mancanegara') return
+      if (filterMode === 'domestik' && category !== 'domestik') return
       if (selectedLocation !== 'all' && location !== selectedLocation) return
       const key = `${tipologi}||${category}||${location}`
       if (!groups[key]) groups[key] = { tipologi, category, location, count: 0 }
@@ -77,7 +82,7 @@ export function TipologiCategoryPlot({ data }: Props) {
     });
 
     return result;
-  }, [data, selectedLocation])
+  }, [data, filterMode, selectedLocation])
 
   const totalCount = useMemo(() => bubbles.reduce((s, b) => s + b.count, 0), [bubbles])
 
@@ -232,15 +237,32 @@ export function TipologiCategoryPlot({ data }: Props) {
   }, [bubbles])
 
   const locationName = selectedLocation === 'all' ? 'Semua Lokasi' : selectedLocation
+  const categoryLabel =
+    filterMode === 'all' ? 'Mancanegara / Domestik'
+      : filterMode === 'mancanegara' ? 'Mancanegara' : 'Domestik'
 
   return (
     <div className="scatter-card">
       <div className="scatter-header">
         <div>
-          <h2 className="scatter-title">Tipologi Wisatawan</h2>
+          <h2 className="scatter-title">Tipologi Wisatawan ({categoryLabel})</h2>
           <p className="scatter-subtitle">({locationName})</p>
         </div>
         <div className="scatter-controls">
+          <div className="scatter-ctrl-group">
+            <span className="scatter-ctrl-label">Kategori Wisatawan</span>
+            <div className="scatter-btn-group">
+              {(['all', 'domestik', 'mancanegara'] as FilterMode[]).map(m => (
+                <button
+                  key={m}
+                  className={`scatter-btn ${filterMode === m ? 'active' : ''}`}
+                  onClick={() => setFilterMode(m)}
+                >
+                  {m === 'all' ? 'Semua' : m === 'domestik' ? 'Domestik' : 'Mancanegara'}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="scatter-ctrl-group">
             <span className="scatter-ctrl-label">Lokasi</span>
             <select
